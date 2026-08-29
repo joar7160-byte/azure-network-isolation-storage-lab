@@ -36,7 +36,7 @@ The Web and Database subnets sit in the same VNet but serve different purposes: 
 
 ### 1. Created a Virtual Network with two subnets
 
-Set up `Vnet` with a Database subnet (10.0.0.0/27) and a Web subnet (10.0.1.0/27), each sized for exactly what this lab needed rather than defaulting to a larger block.
+Set up `Vnet` with a Database subnet (10.0.0.0/27) and a Web subnet (10.0.1.0/27). Each was sized at /27 (32 addresses) rather than a larger default block, matching the actual number of resources expected in this environment instead of over-allocating address space.
 
 <img src="Screenshots/01_vnet-subnets-created.png" width="700"><br><br>
 
@@ -52,13 +52,13 @@ Deployed `web-NSG` to control inbound traffic to the Web subnet.
 
 ### 4. Configured inbound security rules
 
-Set up three rules: allow HTTPS (443) at priority 100, explicitly deny RDP (3389) at priority 110, and deny all other inbound traffic at priority 200. RDP was called out and denied explicitly rather than left to fall through to the catch-all rule, to make the intent visible rather than incidental.
+Set up three rules: allow HTTPS (443) at priority 100, explicitly deny RDP (3389) at priority 110, and deny all other inbound traffic at priority 200.
 
 <img src="Screenshots/04_nsg-inbound-rules-corrected.png" width="900"><br><br>
 
 ### 5. Created a Storage Account
 
-Deployed `db4website` as a general-purpose v2 account with Blob storage as the primary service and locally redundant storage (LRS), since this is a lab environment rather than production data requiring geo-redundancy.
+Deployed `db4website` as a general-purpose v2 account with Blob storage as the primary service. Redundancy was set to locally redundant storage (LRS) rather than geo-redundant, since this is a lab environment rather than production data requiring regional failover.
 
 <img src="Screenshots/05_storage-account-basics.png" width="700"><br><br>
 
@@ -110,13 +110,9 @@ Ran an AzCopy upload from Azure Cloud Shell, which sits outside the VNet, using 
 
 ## Decisions & Significance
 
-- **Right-sized subnets instead of default-sized ones.** Each subnet was sized at /27 (32 addresses) rather than a much larger default block, matching the actual number of resources expected in this environment instead of over-allocating address space.
-
 - **A Private Endpoint over a Service Endpoint.** A Service Endpoint keeps traffic on Azure's private backbone, but the storage account still has a public IP behind it. A Private Endpoint goes further, giving the storage account an actual private IP inside the VNet, which is what fully removes it from the public internet. This project uses a Private Endpoint specifically because the requirement was true isolation, not just a faster private route.
 
 - **RDP denied explicitly, not just caught by the catch-all rule.** The deny-all rule at priority 200 would have blocked RDP anyway, but adding a named rule that explicitly denies port 3389 makes the security intent visible in the rule table itself, rather than leaving a reader to infer it from a generic catch-all.
-
-- **LRS over GRS for this environment.** Since this is a lab rather than a production deployment protecting live customer data, LRS was chosen to minimize cost. A production version of this same architecture protecting real business data would more likely justify GRS or RA-GRS for regional redundancy.
 
 - **ARM templates captured via Template Specs rather than raw JSON files.** Exporting a template proves the configuration can be captured as code, but storing it as a Template Spec turns it into a reusable, versioned Azure resource that can be redeployed on demand, closer to how a team would actually manage infrastructure as code rather than passing JSON files around manually.
 
@@ -126,11 +122,9 @@ Ran an AzCopy upload from Azure Cloud Shell, which sits outside the VNet, using 
 
 ## What This Demonstrates
 
-- Designing network segmentation around trust boundaries, not just convenience
-- Enforcing least-privilege network access with NSG rules, including explicit denies for sensitive ports
+- Designing network segmentation around trust boundaries and enforcing least-privilege access with explicit NSG rules
 - Using Private Endpoints to remove a PaaS resource from the public internet entirely
-- Capturing infrastructure as reusable, versioned deployment templates
-- Validating a security control by testing that it actually fails closed, not just assuming it works
+- Capturing infrastructure as reusable, versioned deployment templates and validating a security control by testing that it actually fails closed
 
 ## Why This Project Matters
 
