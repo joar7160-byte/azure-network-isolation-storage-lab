@@ -1,0 +1,1 @@
+# azure-network-isolation-storage-lab
