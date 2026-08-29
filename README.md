@@ -30,7 +30,7 @@ A company needs its database tier fully isolated from the public internet, a web
 
 ## Architecture
 
-![Network Isolation Architecture](architecture-diagram.svg(1))
+![Network Isolation Architecture](architecture-diagram%20(1).svg)
 
 The Web and Database subnets sit in the same VNet but serve different purposes: Web is the only subnet meant to accept inbound traffic from the internet, and only on port 443. Database is where the storage account's Private Endpoint lives, so anything reaching the storage account has to originate from inside that subnet, not from the public internet. This mirrors a real segmented design where a public-facing tier and a data tier are kept on separate trust boundaries, even inside the same network.
 
