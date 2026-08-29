@@ -38,75 +38,75 @@ The Web and Database subnets sit in the same VNet but serve different purposes: 
 
 Set up `Vnet` with a Database subnet (10.0.0.0/27) and a Web subnet (10.0.1.0/27), each sized for exactly what this lab needed rather than defaulting to a larger block.
 
-<img src="screenshots/01_vnet-subnets-created.png" width="700"><br><br>
+<img src="Screenshots/01_vnet-subnets-created.png" width="700"><br><br>
 
 ### 2. Created a Network Security Group
 
 Deployed `web-NSG` to control inbound traffic to the Web subnet.
 
-<img src="screenshots/02_nsg-created.png" width="700"><br><br>
+<img src="Screenshots/02_nsg-created.png" width="700"><br><br>
 
 ### 3. Associated the NSG with the Web subnet
 
-<img src="screenshots/03_nsg-associated-with-web-subnet.png" width="700"><br><br>
+<img src="Screenshots/03_nsg-associated-with-web-subnet.png" width="700"><br><br>
 
 ### 4. Configured inbound security rules
 
 Set up three rules: allow HTTPS (443) at priority 100, explicitly deny RDP (3389) at priority 110, and deny all other inbound traffic at priority 200. RDP was called out and denied explicitly rather than left to fall through to the catch-all rule, to make the intent visible rather than incidental.
 
-<img src="screenshots/04_nsg-inbound-rules-corrected.png" width="900"><br><br>
+<img src="Screenshots/04_nsg-inbound-rules-corrected.png" width="900"><br><br>
 
 ### 5. Created a Storage Account
 
 Deployed `db4website` as a general-purpose v2 account with Blob storage as the primary service and locally redundant storage (LRS), since this is a lab environment rather than production data requiring geo-redundancy.
 
-<img src="screenshots/05_storage-account-basics.png" width="700"><br><br>
+<img src="Screenshots/05_storage-account-basics.png" width="700"><br><br>
 
 ### 6. Disabled public network access on the Storage Account
 
-<img src="screenshots/06_storage-account-networking-disabled.png" width="900"><br><br>
+<img src="Screenshots/06_storage-account-networking-disabled.png" width="900"><br><br>
 
 ### 7. Created a Private Endpoint scoped to the Database subnet
 
 Gave the storage account a private IP address inside the Database subnet, so it can only be reached from within that subnet rather than over the public internet.
 
-<img src="screenshots/07_private-endpoint-database-subnet.png" width="900"><br><br>
+<img src="Screenshots/07_private-endpoint-database-subnet.png" width="900"><br><br>
 
 ### 8. Exported the Virtual Network as an ARM template
 
-<img src="screenshots/08_vnet-export-template.png" width="900"><br><br>
+<img src="Screenshots/08_vnet-export-template.png" width="900"><br><br>
 
 ### 9. Imported both templates into Template Specs
 
 Captured the VNet and Storage Account configurations as versioned Template Specs, so either resource can be redeployed consistently without manually reconfiguring it through the portal.
 
-<img src="screenshots/09_template-specs-list.png" width="700"><br><br>
+<img src="Screenshots/09_template-specs-list.png" width="700"><br><br>
 
 ### 10. Deployed the VNet from its Template Spec
 
-<img src="screenshots/10_vnet-template-deploy.png" width="700"><br><br>
+<img src="Screenshots/10_vnet-template-deploy.png" width="700"><br><br>
 
 ### 11. Confirmed the VNet deployment completed successfully
 
-<img src="screenshots/11_vnet-deployment-complete.png" width="900"><br><br>
+<img src="Screenshots/11_vnet-deployment-complete.png" width="900"><br><br>
 
 ### 12. Deployed the Storage Account from its Template Spec
 
-<img src="screenshots/12_storage-template-deploy.png" width="700"><br><br>
+<img src="Screenshots/12_storage-template-deploy.png" width="700"><br><br>
 
 ### 13. Confirmed the Storage Account deployment completed successfully
 
-<img src="screenshots/13_storage-deployment-complete.png" width="700"><br><br>
+<img src="Screenshots/13_storage-deployment-complete.png" width="700"><br><br>
 
 ### 14. Generated a Shared Access Signature to test access
 
-<img src="screenshots/14_sas-token-generation.png" width="700"><br><br>
+<img src="Screenshots/14_sas-token-generation.png" width="700"><br><br>
 
 ### 15. Attempted an AzCopy upload from outside the Virtual Network
 
 Ran an AzCopy upload from Azure Cloud Shell, which sits outside the VNet, using a valid SAS token. The request was denied with a 403 Authorization Failure, confirming that the Private Endpoint correctly blocks access from anywhere other than the Database subnet, regardless of whether the credentials presented are valid.
 
-<img src="screenshots/15_azcopy-test-403-private-endpoint-blocking.png" width="900"><br><br>
+<img src="Screenshots/15_azcopy-test-403-private-endpoint-blocking.png" width="900"><br><br>
 
 ## Decisions & Significance
 
