@@ -122,8 +122,6 @@ Ran an AzCopy upload from Azure Cloud Shell, which sits outside the VNet, using 
 
 ## Troubleshooting Notes
 
-- NSG rules were initially misconfigured with HTTPS denied and RDP allowed, the reverse of the intended policy; caught during review and corrected to allow HTTPS and explicitly deny RDP
-- Redeploying the storage account from its Template Spec initially failed because the storage account name was already taken, since Azure requires globally unique storage account names; resolved by targeting the same resource group as the original account
 - AzCopy upload from Cloud Shell failed with a 403 Authorization Failure despite a valid, correctly scoped SAS token; this was expected behavior, not a bug, since the storage account's public network access is disabled and Cloud Shell runs outside the VNet, confirming the Private Endpoint's network-level restriction takes precedence over token-level permissions
 
 ## What This Demonstrates
