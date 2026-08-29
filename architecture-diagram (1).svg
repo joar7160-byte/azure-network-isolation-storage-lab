@@ -1,0 +1,99 @@
+<svg viewBox="0 0 1000 640" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#2e8b57"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#c0392b"/>
+    </marker>
+    <marker id="arrowGray" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#555555"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1000" height="640" fill="#ffffff"/>
+
+  <text x="500" y="34" text-anchor="middle" font-size="22" font-weight="bold" fill="#1b1b1b">Azure Network Isolation and Secure Storage Lab</text>
+  <text x="500" y="56" text-anchor="middle" font-size="13" fill="#666666">Architecture Overview</text>
+
+  <!-- Internet / outside actors -->
+  <rect x="30" y="100" width="200" height="70" rx="8" fill="#eef2f7" stroke="#8a95a5" stroke-width="1.5"/>
+  <text x="130" y="128" text-anchor="middle" font-size="14" font-weight="bold" fill="#2c3e50">Public Internet</text>
+  <text x="130" y="146" text-anchor="middle" font-size="11" fill="#555555">HTTPS clients (port 443)</text>
+
+  <rect x="30" y="440" width="200" height="80" rx="8" fill="#fdecea" stroke="#c0392b" stroke-width="1.5"/>
+  <text x="130" y="465" text-anchor="middle" font-size="14" font-weight="bold" fill="#922b21">Azure Cloud Shell</text>
+  <text x="130" y="482" text-anchor="middle" font-size="11" fill="#7b241c">Outside the VNet</text>
+  <text x="130" y="498" text-anchor="middle" font-size="11" fill="#7b241c">Valid SAS token, no network path</text>
+
+  <!-- VNet container -->
+  <rect x="290" y="90" width="560" height="470" rx="10" fill="#f7fbff" stroke="#2e6da4" stroke-width="2"/>
+  <text x="310" y="115" font-size="15" font-weight="bold" fill="#1b4f72">Vnet — 10.0.0.0/16</text>
+
+  <!-- NSG -->
+  <rect x="320" y="135" width="240" height="98" rx="6" fill="#fff8e1" stroke="#b8860b" stroke-width="1.5"/>
+  <text x="440" y="154" text-anchor="middle" font-size="13" font-weight="bold" fill="#7d5a00">web-NSG</text>
+  <text x="332" y="172" font-size="11" fill="#5c4600">100  Allow  HTTPS (443)</text>
+  <text x="332" y="188" font-size="11" fill="#5c4600">110  Deny   RDP (3389)</text>
+  <text x="332" y="204" font-size="11" fill="#5c4600">200  Deny   All other inbound</text>
+  <text x="332" y="222" font-size="10" fill="#8a6d00">Applied to Web subnet</text>
+
+  <!-- Web subnet -->
+  <rect x="320" y="250" width="240" height="90" rx="6" fill="#eafaf1" stroke="#2e8b57" stroke-width="1.5"/>
+  <text x="440" y="272" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e6b41">Web subnet</text>
+  <text x="440" y="290" text-anchor="middle" font-size="11" fill="#1e6b41">10.0.1.0/27</text>
+  <text x="440" y="308" text-anchor="middle" font-size="10" fill="#3a7a55">Public-facing tier</text>
+  <text x="440" y="324" text-anchor="middle" font-size="10" fill="#3a7a55">No direct storage access</text>
+
+  <!-- Database subnet -->
+  <rect x="320" y="365" width="240" height="90" rx="6" fill="#eaf2fb" stroke="#2e6da4" stroke-width="1.5"/>
+  <text x="440" y="387" text-anchor="middle" font-size="13" font-weight="bold" fill="#1b4f72">Database subnet</text>
+  <text x="440" y="405" text-anchor="middle" font-size="11" fill="#1b4f72">10.0.0.0/27</text>
+  <text x="440" y="423" text-anchor="middle" font-size="10" fill="#2e6da4">Hosts the Private Endpoint</text>
+  <text x="440" y="439" text-anchor="middle" font-size="10" fill="#2e6da4">Only path to storage account</text>
+
+  <!-- Private Endpoint -->
+  <rect x="600" y="365" width="220" height="90" rx="6" fill="#f3e9ff" stroke="#7d3c98" stroke-width="1.5"/>
+  <text x="710" y="387" text-anchor="middle" font-size="13" font-weight="bold" fill="#5b2c6f">Private Endpoint</text>
+  <text x="710" y="405" text-anchor="middle" font-size="11" fill="#5b2c6f">database_EP</text>
+  <text x="710" y="423" text-anchor="middle" font-size="10" fill="#6c3483">Private IP inside</text>
+  <text x="710" y="439" text-anchor="middle" font-size="10" fill="#6c3483">Database subnet</text>
+
+  <!-- Storage account (outside VNet box, right side) -->
+  <rect x="820" y="250" width="150" height="100" rx="8" fill="#fdf2e9" stroke="#af601a" stroke-width="1.5"/>
+  <text x="895" y="275" text-anchor="middle" font-size="13" font-weight="bold" fill="#7e4409">db4website</text>
+  <text x="895" y="293" text-anchor="middle" font-size="10" fill="#7e4409">Storage Account</text>
+  <text x="895" y="309" text-anchor="middle" font-size="10" fill="#7e4409">Blob, LRS</text>
+  <text x="895" y="325" text-anchor="middle" font-size="10" font-weight="bold" fill="#c0392b">Public access: Disabled</text>
+
+  <!-- Arrows -->
+  <!-- Internet -> NSG -->
+  <line x1="230" y1="135" x2="316" y2="170" stroke="#2e8b57" stroke-width="2" marker-end="url(#arrowGreen)"/>
+  <text x="245" y="130" font-size="10" fill="#1e6b41">443 allowed</text>
+
+  <!-- NSG -> Web subnet -->
+  <line x1="440" y1="233" x2="440" y2="248" stroke="#555555" stroke-width="2" marker-end="url(#arrowGray)"/>
+
+  <!-- Web subnet -> Database subnet (intra-VNet, no direct storage path) -->
+  <path d="M440,340 C440,352 440,352 440,363" stroke="#8a95a5" stroke-width="1.5" stroke-dasharray="4,3" fill="none"/>
+  <text x="452" y="356" font-size="9" fill="#5d6d7e">intra-VNet only</text>
+
+  <!-- Database subnet -> Private Endpoint -->
+  <line x1="560" y1="410" x2="597" y2="410" stroke="#2e8b57" stroke-width="2" marker-end="url(#arrowGreen)"/>
+
+  <!-- Private Endpoint -> Storage account -->
+  <path d="M820,395 C 850,395 870,340 890,352" stroke="#2e8b57" stroke-width="2" fill="none" marker-end="url(#arrowGreen)"/>
+  <text x="815" y="345" font-size="10" fill="#1e6b41">private IP</text>
+
+  <!-- Cloud Shell -> Storage account: blocked -->
+  <line x1="230" y1="470" x2="815" y2="330" stroke="#c0392b" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrowRed)"/>
+  <rect x="470" y="430" width="120" height="24" fill="#ffffff"/>
+  <text x="530" y="447" text-anchor="middle" font-size="11" font-weight="bold" fill="#c0392b">403 — blocked</text>
+
+  <!-- Legend -->
+  <line x1="320" y1="580" x2="350" y2="580" stroke="#2e8b57" stroke-width="2" marker-end="url(#arrowGreen)"/>
+  <text x="358" y="584" font-size="11" fill="#333333">Allowed traffic</text>
+
+  <line x1="480" y1="580" x2="510" y2="580" stroke="#c0392b" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrowRed)"/>
+  <text x="518" y="584" font-size="11" fill="#333333">Denied / no network path</text>
+</svg>
